@@ -145,3 +145,37 @@ footer{
     margin-bottom: 10px;
     text-align: center;
 }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden; 
+
+table thead tr {
+    background-color: #0f172a; 
+    color: #ffffff;
+    text-align: left;
+}
+
+table th, table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+table tbody tr {
+    background-color: #ffffff;
+    transition: background-color 0.2s ease;
+}
+
+table tbody tr:nth-of-type(even) {
+    background-color: #f8fafc;
+}
+
+table tbody tr:hover {
+    background-color: #e2e8f0;
+    cursor: default;
+}
