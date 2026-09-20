@@ -146,36 +146,44 @@ footer{
     text-align: center;
 }
 
-table {
+#tabla-talleres {
     width: 100%;
     border-collapse: collapse;
+    background-color: #fdf6e3;
+    border: 3px solid #8b4513;
     margin: 20px 0;
-    font-size: 16px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    overflow: hidden; 
+}
 
-table thead tr {
-    background-color: #0f172a; 
+#tabla-talleres th {
+    background-color: #cd853f;
     color: #ffffff;
+    padding: 10px;
+    border: 1px solid #8b4513;
     text-align: left;
 }
 
-table th, table td {
-    padding: 12px 15px;
-    border-bottom: 1px solid #e5e7eb;
+#tabla-talleres td {
+    padding: 8px;
+    border: 1px solid #deb887;
 }
 
-table tbody tr {
-    background-color: #ffffff;
-    transition: background-color 0.2s ease;
+#tabla-talleres tbody tr:nth-of-type(even) {
+    background-color: #f5ece0;
 }
 
-table tbody tr:nth-of-type(even) {
-    background-color: #f8fafc;
+#tabla-talleres tbody tr:hover {
+    background-color: #e6d7c3;
 }
 
-table tbody tr:hover {
-    background-color: #e2e8f0;
-    cursor: default;
+#formulario-arreglos button {
+    background-color: #cd853f;
+    color: #ffffff;
+    border: 2px solid #8b4513;
+    padding: 8px 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#formulario-arreglos button:hover {
+    background-color: #a0522d;
 }
