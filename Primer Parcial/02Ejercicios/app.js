@@ -7,22 +7,76 @@ const talleres = [
 
 function pintarTabla(){
 
-}
-//debe de obtener la tabla y llenarla con los datos de talleres
+    const tbody = document.querySelector('#tabla-talleres tbody');
+    
+    if (tbody) {
+        tbody.innerHTML = '';
 
-const formArreglos = document.getElementById('form-arreglos');
-const resultadosArreglos = document.getElementById('resultado-arreglo');
+        talleres.forEach(taller => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${taller.nombre}</td>
+                <td>${taller.instructor}</td>
+                <td>${taller.cupo}</td>
+                <td>${taller.inscritos}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+}
+
+document.addEventListener('DOMContentLoaded', pintarTabla);
+
+const formArreglos = document.getElementById('formulario-arreglos');
+const resultadosArreglos = document.getElementById('resultado de Arreglo');
 const selectOperacionArreglo = document.getElementById('operacion-arreglo');
 
-formArreglos.addEventListener('submit', (evento) =>{
-    evento.preventDefault();
-    const operacion = selectOperacionArreglo.value;
-    let resultado;
-    switch(operacion){
-        case 'ForEach':
-            resultado = talleres.map((t) => `- ${t.nombre} (${t.inscritos}/${t.cupo})`).join(` \n`);
-            break;
-    }
+if (formArreglos) {
+    formArreglos.addEventListener('submit', (evento) => {
+        evento.preventDefault();
+        
+        const operacion = selectOperacionArreglo.value;
+        let resultado;
+        
+        switch(operacion){
+            case 'ForEach':
+ 
+                resultado = talleres.map((t) => `- ${t.nombre} (${t.inscritos}/${t.cupo})`).join('\n');
+                break;
+                
+            case 'map':
 
-    resultadosArreglos.textContent = resultado;
-})
+                resultado = "Arreglo de nombres: \n" + talleres.map((t) => t.nombre).join(', ');
+                break;
+                
+            case 'filter':
+
+                const llenos = talleres.filter((t) => t.inscritos >= t.cupo);
+                resultado = "Talleres sin cupo: \n" + llenos.map((t) => t.nombre).join(', ');
+                break;
+                
+            case 'find':
+
+                const tallerMaria = talleres.find((t) => t.instructor === 'Ing. María López');
+                resultado = tallerMaria ? `Primer taller encontrado: ${tallerMaria.nombre}` : 'No encontrado';
+                break;
+                
+            case 'reduce':
+
+                const totalInscritos = talleres.reduce((acumulador, t) => acumulador + t.inscritos, 0);
+                resultado = `Total de alumnos inscritos en todos los talleres: ${totalInscritos}`;
+                break;
+                
+            case 'filterMap':
+
+                const disponibles = talleres.filter((t) => t.inscritos < t.cupo).map((t) => t.nombre);
+                resultado = "Talleres con cupo disponible: \n" + disponibles.join(', ');
+                break;
+                
+            default:
+                resultado = 'Selecciona una operación válida.';
+        }
+
+        resultadosArreglos.textContent = resultado;
+    });
+}

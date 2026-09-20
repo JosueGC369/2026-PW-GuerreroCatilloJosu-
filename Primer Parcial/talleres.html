@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ejercicios con node</title>
+    <link rel="stylesheet" href="">
+</head>
+<body>
+    <header><h1>ejercicios con node</h1></header>
+    <main>
+        <section class="ejercicio" >
+            <h2 id="tirulo-arreglos"> Arreglos del codigo <code>01-arreglos.js</code> </h2>
+            <p>datos de prueba con js</p>
+            
+            <div class="tabla-scroll">
+                <table id="tabla-talleres" border="1" style="width: 100%; text-align: left; margin-bottom: 20px;">
+                    <thead>
+                        <tr>
+                            <th>nombre</th>
+                            <th>instructor</th>
+                            <th>cupo</th>
+                            <th>inscritos</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                            
+                    </tbody>
+                </table>
+            </div>
+
+            <form id="formulario-arreglos" class="formulario">
+                <div class="campos">
+                    <label for="operacion-arreglo">Selecciona la operación a invocar:</label>
+                    <select name="operacion-arreglo" id="operacion-arreglo">
+                        <option value="ForEach">ForEach - Imprimir lista de talleres</option>
+                        <option value="map">map - Crear arreglo solo con nombres</option>
+                        <option value="filter">filter - Filtrar talleres llenos (inscritos >= cupo)</option>
+                        <option value="find">find - Encontrar primer taller de Ing. María López</option>
+                        <option value="reduce">reduce - Calcular total de inscritos</option>
+                        <option value="filterMap">filter + map - Nombres de talleres con cupo disponible</option>
+                    </select>
+                </div>
+                <br>
+                <button type="submit">ejecutar</button>
+            </form>
+            
+            <br>
+            <h3>Resultado de la invocación:</h3>
+            <output class="resultado" id="resultado de Arreglo" for="formulario-arreglos" style="color: #007bff; font-weight: bold; white-space: pre-line;"></output>
+        </section>
+    </main>
+
+    <script src="./02Ejercicios/app.js"></script>
+
+</body>
+</html>
