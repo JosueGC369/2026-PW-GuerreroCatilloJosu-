@@ -1,0 +1,110 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f3f4f6;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.header {
+    background-color: #1e3a8a;
+    color: white;
+    padding: 30px;
+    text-align: center;
+    border-radius: 8px 8px 0 0;
+    margin-bottom: 0;
+}
+
+.header h1 {
+    text-transform: capitalize;
+    font-size: 2.2rem;
+}
+
+nav.navegacion {
+    background-color: #2563eb;
+    padding: 15px;
+    border-radius: 0 0 8px 8px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+nav.navegacion ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+nav.navegacion ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+nav.navegacion ul li a:hover {
+    background-color: #1d4ed8;
+}
+
+.content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 25px;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+.tablas_ejercicios {
+    background-color: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.tabla {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.tabla th {
+    background-color: #1e3a8a;
+    color: white;
+    padding: 12px;
+    text-align: left;
+}
+
+.tabla td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+.tabla tr:hover {
+    background-color: #f9fafb;
+}
+
+.tabla a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.tabla a:hover {
+    text-decoration: underline;
+    color: #1d4ed8;
+}
