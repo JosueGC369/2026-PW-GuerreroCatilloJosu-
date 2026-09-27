@@ -48,6 +48,30 @@
             <h3>Resultado de la invocación:</h3>
             <output class="resultado" id="resultado de Arreglo" for="formulario-arreglos" style="color: #8b4513; font-weight: bold; white-space: pre-line;"></output>
         </section>
+
+        <section class="ejercicio" >
+            <h2 id="titulo-objetos"> Objetos del código <code>02-objetos-json.js</code> </h2>
+            <p>Operaciones con un objeto de taller de prueba</p>
+            
+            <form id="formulario-objetos" class="formulario">
+                <div class="campos">
+                    <label for="operacion-objeto">Selecciona la operación a invocar:</label>
+                    <select name="operacion-objeto" id="operacion-objeto">
+                        <option value="keys">Object.keys - Obtener propiedades</option>
+                        <option value="values">Object.values - Obtener valores</option>
+                        <option value="entries">Object.entries - Recorrer con for..of</option>
+                        <option value="stringify">JSON.stringify - Convertir a texto</option>
+                        <option value="parse">JSON.parse - Convertir de vuelta a objeto</option>
+                    </select>
+                </div>
+                <br>
+                <button type="submit">ejecutar</button>
+            </form>
+            
+            <br>
+            <h3>Resultado de la invocación:</h3>
+            <output class="resultado" id="resultado-objeto" for="formulario-objetos" style="color: #8b4513; font-weight: bold; white-space: pre-line;"></output>
+        </section>
     </main>
 
     <script src="./02Ejercicios/app.js"></script>
