@@ -3,7 +3,7 @@
 }
 
 body {
-    margin: o;
+    margin: 0;
     font-family: system-ui, Arial, sans-serif;
     color: #1f2937;
     background-color: #f9fafb;
@@ -38,12 +38,12 @@ footer{
 .catalogo {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 1.rem;
+    gap: 1rem;
 }
 
 .tarjeta {
-    padding: 1.rem;
-    border: 1pk solid #e5e7eb;
+    padding: 1rem;
+    border: 1px solid #e5e7eb;
     border-radius: 0.5rem;
     background-color: #ffff;
 }

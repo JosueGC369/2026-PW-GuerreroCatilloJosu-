@@ -28,7 +28,7 @@ function pintarTabla(){
 document.addEventListener('DOMContentLoaded', pintarTabla);
 
 const formArreglos = document.getElementById('formulario-arreglos');
-const resultadosArreglos = document.getElementById('resultado de Arreglo');
+const resultadosArreglos = document.getElementById('resultado-arreglo');
 const selectOperacionArreglo = document.getElementById('operacion-arreglo');
 
 if (formArreglos) {
