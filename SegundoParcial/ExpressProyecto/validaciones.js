@@ -1,0 +1,26 @@
+//vamos atener funciones que se encargan de validar correo, boleta y contraseña
+
+//wiii mas tarea siiiii
+
+//aqui va funcion de correo
+function validarCorreo(correo) {
+    if (typeof correo !== 'string') return false;
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(correo.trim());
+}
+
+//aqui va funcion de boleta
+function validarBoleta(boleta) {
+    if (typeof boleta !== 'string') return false;
+    // Boleta IPN: 10 dígitos numéricos
+    const regex = /^\d{10}$/;
+    return regex.test(boleta.trim());
+}
+
+function validarContrasena(contrasena) {
+    if (typeof contrasena !== 'string') return false;
+    return contrasena.length >= 8;
+}
+
+module.exports = { validarCorreo, validarBoleta, validarContrasena };
+
