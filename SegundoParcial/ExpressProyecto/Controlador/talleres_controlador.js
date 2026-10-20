@@ -1,7 +1,6 @@
 const talleresModel = require('../Modelo/talleres');
 const asistenciasModel = require('../Modelo/asistencias');
 
-// Listar todos los talleres
 async function listarTalleres(req, res) {
     try {
         const talleres = await talleresModel.listar();
@@ -11,7 +10,6 @@ async function listarTalleres(req, res) {
     }
 }
 
-// Obtener un taller por ID (incluye conteo de asistentes)
 async function obtenerTaller(req, res) {
     try {
         const taller = await talleresModel.obtenerPorId(req.params.id);
@@ -24,7 +22,6 @@ async function obtenerTaller(req, res) {
     }
 }
 
-// Crear un nuevo taller
 async function crearTaller(req, res) {
     const { nombre, instructor, fecha, cupo } = req.body || {};
 
@@ -40,7 +37,6 @@ async function crearTaller(req, res) {
     }
 }
 
-// Listar las asistencias de un taller específico (/api/talleres/:id/asistencias)
 async function listarAsistenciasPorTaller(req, res) {
     try {
         const asistencias = await asistenciasModel.consultarListaDeAsistencia(req.params.id);
@@ -56,4 +52,3 @@ module.exports = {
     crearTaller,
     listarAsistenciasPorTaller
 };
-

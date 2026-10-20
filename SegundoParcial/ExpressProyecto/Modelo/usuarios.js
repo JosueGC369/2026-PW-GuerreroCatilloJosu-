@@ -51,4 +51,3 @@ module.exports = {listar, obtenerPorId, crear, actualizar, eliminar, buscarPorCo
 //deberan de crear las otras 2 entidades talleres y assitencias
 //Para taller hay que crear las funciones de consultarportaller y registrarse en un taller
 //para assitencia hay que crear las funciones de regitrarassitencia en el taller, consultarlistadeassitencia
-

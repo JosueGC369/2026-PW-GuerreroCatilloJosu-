@@ -1,7 +1,7 @@
 const pool = require('../db-local');
 const crypto = require('crypto');
 
-// Registrar la asistencia de un alumno a un taller
+//registrar asistencia
 async function registrarAsistencia({ taller_id, nombre_alumno, boleta }) {
     const id = crypto.randomUUID();
 
@@ -28,7 +28,7 @@ async function registrarAsistencia({ taller_id, nombre_alumno, boleta }) {
     };
 }
 
-// Consultar la lista de asistencias registradas para un taller
+//consultar lista de asistencia
 async function consultarListaDeAsistencia(taller_id) {
     const [filas] = await pool.query(
         'SELECT id, taller_id, nombre_alumno, boleta, fecha_registro FROM asistencias WHERE taller_id = ? ORDER BY fecha_registro ASC',
@@ -37,7 +37,7 @@ async function consultarListaDeAsistencia(taller_id) {
     return filas || [];
 }
 
-// Consultar todas las asistencias generales
+//consultar todas las asistencias
 async function listar() {
     const [filas] = await pool.query(
         'SELECT id, taller_id, nombre_alumno, boleta, fecha_registro FROM asistencias ORDER BY fecha_registro ASC'
@@ -52,4 +52,3 @@ module.exports = {
     listarPorTaller: consultarListaDeAsistencia,
     listar
 };
-

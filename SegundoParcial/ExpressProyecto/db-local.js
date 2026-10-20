@@ -12,10 +12,6 @@ const DB_CONFIG = {
     dateStrings: true,
 };
 
-// ========================================================
-// Base de datos en memoria (Paso 0 - Práctica y Fallback)
-// Contiene exactamente los datos semilla definidos en la guía
-// ========================================================
 class MemoryDatabase {
     constructor() {
         this.usuarios = [
@@ -44,7 +40,6 @@ class MemoryDatabase {
     async query(sql, params = []) {
         const cleanSql = sql.trim().replace(/\s+/g, ' ');
 
-        // 1. USUARIOS
         if (/^SELECT\s+.*FROM\s+usuarios\s+ORDER\s+BY/i.test(cleanSql)) {
             const filas = this.usuarios.map(u => ({
                 id: u.id,
@@ -71,7 +66,6 @@ class MemoryDatabase {
 
         if (/^INSERT\s+INTO\s+usuarios/i.test(cleanSql)) {
             const [nombre, correo, contrasenaHash, boleta, rol] = params;
-            // Verificar duplicados (boleta o correo)
             const dup = this.usuarios.find(x => x.correo === correo || x.boleta === boleta);
             if (dup) {
                 const err = new Error('Duplicate entry for key usuarios.correo or usuarios.boleta');
@@ -96,7 +90,6 @@ class MemoryDatabase {
             const u = this.usuarios.find(x => x.id === id);
             if (!u) return [{ affectedRows: 0 }];
 
-            // Verificar si el correo que se actualiza ya pertenece a otro usuario
             const cambios = cleanSql.match(/SET\s+(.*?)\s+WHERE/i)[1].split(',');
             let paramIdx = 0;
             for (const c of cambios) {
@@ -123,7 +116,6 @@ class MemoryDatabase {
             return [{ affectedRows: 1 }];
         }
 
-        // 2. TALLERES
         if (/^SELECT\s+.*FROM\s+talleres\s+WHERE\s+id\s*=\s*\?/i.test(cleanSql)) {
             const id = String(params[0]);
             const t = this.talleres.find(x => String(x.id) === id);
@@ -146,12 +138,10 @@ class MemoryDatabase {
             const idx = this.talleres.findIndex(x => String(x.id) === id);
             if (idx === -1) return [{ affectedRows: 0 }];
             this.talleres.splice(idx, 1);
-            // Cascada asistencias
             this.asistencias = this.asistencias.filter(a => String(a.taller_id) !== id);
             return [{ affectedRows: 1 }];
         }
 
-        // 3. ASISTENCIAS
         if (/^SELECT\s+COUNT\(\*\)\s+AS\s+total\s+FROM\s+asistencias\s+WHERE\s+taller_id\s*=\s*\?/i.test(cleanSql)) {
             const tallerId = String(params[0]);
             const count = this.asistencias.filter(a => String(a.taller_id) === tallerId).length;
@@ -170,7 +160,6 @@ class MemoryDatabase {
 
         if (/^INSERT\s+INTO\s+asistencias/i.test(cleanSql)) {
             const [id, taller_id, nombre_alumno, boleta] = params;
-            // Verificar llave foránea contra talleres
             const tallerExiste = this.talleres.some(t => String(t.id) === String(taller_id));
             if (!tallerExiste) {
                 const err = new Error('Cannot add or update a child row: a foreign key constraint fails (`proyecto_web`.`asistencias`, CONSTRAINT `asistencias_ibfk_1` FOREIGN KEY (`taller_id`) REFERENCES `talleres` (`id`))');
@@ -199,30 +188,25 @@ let useMemory = process.env.USE_MEMORY_DB === 'true';
 if (!useMemory) {
     try {
         const realPool = mysql.createPool(DB_CONFIG);
-        // Prueba inicial asíncrona de conexión
         realPool.getConnection()
             .then(conn => {
                 conn.release();
                 activePool = realPool;
-                console.log(`[BD] Conectado exitosamente a MySQL (${DB_CONFIG.database}) en ${DB_CONFIG.host}:${DB_CONFIG.port}`);
+                console.log(`Conectado a MySQL (${DB_CONFIG.database}) en ${DB_CONFIG.host}:${DB_CONFIG.port}`);
             })
-            .catch(err => {
-                console.warn(`[BD] No se pudo conectar a MySQL (${err.code || err.message}).`);
-                console.log(`[BD] Activando modo base de datos en memoria con datos semilla (Paso 0 - modo práctico).`);
+            .catch(() => {
                 activePool = new MemoryDatabase();
             });
     } catch (e) {
         activePool = new MemoryDatabase();
     }
 } else {
-    console.log(`[BD] Modo memoria activado por configuración (USE_MEMORY_DB=true).`);
     activePool = new MemoryDatabase();
 }
 
 const poolProxy = {
     async query(sql, params) {
         if (!activePool) {
-            // Mientras se define la conexión inicial, esperamos brevemente
             await new Promise(r => setTimeout(r, 100));
             if (!activePool) activePool = new MemoryDatabase();
         }

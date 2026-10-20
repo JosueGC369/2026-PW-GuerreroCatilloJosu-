@@ -12,7 +12,6 @@ function validarCorreo(correo) {
 //aqui va funcion de boleta
 function validarBoleta(boleta) {
     if (typeof boleta !== 'string') return false;
-    // Boleta IPN: 10 dígitos numéricos
     const regex = /^\d{10}$/;
     return regex.test(boleta.trim());
 }
@@ -22,5 +21,4 @@ function validarContrasena(contrasena) {
     return contrasena.length >= 8;
 }
 
-module.exports = { validarCorreo, validarBoleta, validarContrasena };
-
+module.exports = {validarCorreo, validarBoleta, validarContrasena};

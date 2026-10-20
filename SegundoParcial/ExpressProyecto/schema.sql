@@ -1,12 +1,6 @@
--- ========================================================
--- Schema de Base de Datos para Registro de Asistencias - CECyT 9
--- Programación Web - 2do Parcial
--- ========================================================
-
 CREATE DATABASE IF NOT EXISTS proyecto_web CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE proyecto_web;
 
--- Tabla de Usuarios (CRUD Semana 8)
 CREATE TABLE IF NOT EXISTS usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(255) NOT NULL,
@@ -17,7 +11,6 @@ CREATE TABLE IF NOT EXISTS usuarios (
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Tabla de Talleres (Semana 9)
 CREATE TABLE IF NOT EXISTS talleres (
     id VARCHAR(36) PRIMARY KEY,
     nombre VARCHAR(255) NOT NULL,
@@ -27,7 +20,6 @@ CREATE TABLE IF NOT EXISTS talleres (
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Tabla de Asistencias (Semana 9)
 CREATE TABLE IF NOT EXISTS asistencias (
     id VARCHAR(36) PRIMARY KEY,
     taller_id VARCHAR(36) NOT NULL,
@@ -37,18 +29,12 @@ CREATE TABLE IF NOT EXISTS asistencias (
     FOREIGN KEY (taller_id) REFERENCES talleres(id) ON DELETE CASCADE
 );
 
--- ========================================================
--- Datos Semilla (Seed Data) para pruebas
--- ========================================================
-
--- Usuarios Semilla
 INSERT IGNORE INTO usuarios (id, nombre, correo, contrasena_hash, boleta, rol) VALUES
 (1, 'Admin Semilla', 'admin@cecyt9.ipn.mx', '$2b$10$wTqg.qZl7p0xV8.Z7p1bse2Q2x5qN6V5g1b4a8e9e1c2d3f4a5b6c', '2026090001', 'admin'),
 (2, 'Ana López', 'ana.lopez@alumno.ipn.mx', '$2b$10$wTqg.qZl7p0xV8.Z7p1bse2Q2x5qN6V5g1b4a8e9e1c2d3f4a5b6c', '2026090002', 'alumno'),
 (3, 'Luis Pérez', 'luis.perez@alumno.ipn.mx', '$2b$10$wTqg.qZl7p0xV8.Z7p1bse2Q2x5qN6V5g1b4a8e9e1c2d3f4a5b6c', '2026090003', 'alumno'),
 (4, 'María Hernández', 'maria.hdez@alumno.ipn.mx', '$2b$10$wTqg.qZl7p0xV8.Z7p1bse2Q2x5qN6V5g1b4a8e9e1c2d3f4a5b6c', '2026090004', 'alumno');
 
--- Talleres Semilla
 INSERT IGNORE INTO talleres (id, nombre, instructor, fecha, cupo) VALUES
 ('a1000000-0000-4000-8000-000000000001', 'Introducción a Python', 'Ing. Roberto Soto', '2026-11-01', 20),
 ('a1000000-0000-4000-8000-000000000002', 'Desarrollo Web con HTML y CSS', 'Lic. Carmen Cruz', '2026-11-05', 25),
@@ -56,8 +42,6 @@ INSERT IGNORE INTO talleres (id, nombre, instructor, fecha, cupo) VALUES
 ('a1000000-0000-4000-8000-000000000004', 'Git y GitHub en equipo', 'Ing. Tu Nombre', '2026-11-15', 3),
 ('a1000000-0000-4000-8000-000000000005', 'Next.js desde cero', 'Ing. Laura Martínez', '2026-11-25', 15);
 
--- Asistencias Semilla
 INSERT IGNORE INTO asistencias (id, taller_id, nombre_alumno, boleta, fecha_registro) VALUES
 ('asist-00000000-0000-4000-8000-000000000001', 'a1000000-0000-4000-8000-000000000004', 'Ana López', '2026090002', '2026-10-15 10:00:00'),
 ('asist-00000000-0000-4000-8000-000000000002', 'a1000000-0000-4000-8000-000000000004', 'Luis Pérez', '2026090003', '2026-10-15 11:30:00');
-

@@ -1,6 +1,5 @@
 const asistenciasModel = require('../Modelo/asistencias');
 
-// Registrar la asistencia de un alumno a un taller
 async function registrarAsistencia(req, res) {
     const { taller_id, nombre_alumno, boleta } = req.body || {};
 
@@ -12,12 +11,10 @@ async function registrarAsistencia(req, res) {
         const asistencia = await asistenciasModel.registrarAsistencia({ taller_id, nombre_alumno, boleta });
         res.status(201).json(asistencia);
     } catch (error) {
-        // En caso de que el taller no exista, el error de llave foránea responde 500
         res.status(500).json({ error: error.message });
     }
 }
 
-// Listar todas las asistencias registradas
 async function listarAsistencias(req, res) {
     try {
         const asistencias = await asistenciasModel.listar();
@@ -31,4 +28,3 @@ module.exports = {
     registrarAsistencia,
     listarAsistencias
 };
-

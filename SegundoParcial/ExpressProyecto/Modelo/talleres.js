@@ -1,13 +1,13 @@
 const pool = require('../db-local');
 const crypto = require('crypto');
 
-// Consultar todos los talleres
+//consultar todos los talleres
 async function listar() {
     const [filas] = await pool.query('SELECT id, nombre, instructor, fecha, cupo FROM talleres ORDER BY fecha ASC');
     return filas;
 }
 
-// Consultar taller por ID con el número de alumnos inscritos (asistentes)
+//consultar por taller
 async function obtenerPorId(id) {
     const [filas] = await pool.query('SELECT id, nombre, instructor, fecha, cupo FROM talleres WHERE id = ?', [id]);
     if (!filas || filas.length === 0) return undefined;
@@ -21,10 +21,9 @@ async function obtenerPorId(id) {
     };
 }
 
-// Alias para satisfacer el requerimiento del profesor en clase
 const consultarPorTaller = obtenerPorId;
 
-// Registrar un nuevo taller
+//crear taller
 async function crear({ nombre, instructor, fecha, cupo }) {
     const id = crypto.randomUUID();
     const cupoFinal = (cupo !== undefined && cupo !== null) ? Number(cupo) : 20;
@@ -37,7 +36,7 @@ async function crear({ nombre, instructor, fecha, cupo }) {
     return obtenerPorId(id);
 }
 
-// Eliminar un taller por ID
+//eliminar taller
 async function eliminar(id) {
     const [info] = await pool.query('DELETE FROM talleres WHERE id = ?', [id]);
     return info.affectedRows > 0;
@@ -50,4 +49,3 @@ module.exports = {
     crear,
     eliminar
 };
-
