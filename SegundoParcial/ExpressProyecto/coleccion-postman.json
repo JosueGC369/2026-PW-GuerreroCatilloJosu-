@@ -1,0 +1,620 @@
+{
+	"info": {
+		"_postman_id": "cecyt9-backend-guerrero-castillo-josue",
+		"name": "CECyT9 - Mi backend - Guerrero Castillo Josué",
+		"description": "Colección completa de 24 peticiones para la práctica de la Semana 9 de Programación Web.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3001",
+			"type": "string"
+		},
+		{
+			"key": "tallerId",
+			"value": "a1000000-0000-4000-8000-000000000004",
+			"type": "string"
+		},
+		{
+			"key": "usuarioId",
+			"value": "1",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Prueba de vida",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Talleres",
+			"item": [
+				{
+					"name": "Listar talleres",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/talleres",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"talleres"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ver un taller",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/talleres/{{tallerId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"talleres",
+								"{{tallerId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ver un taller que no existe",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/talleres/00000000-0000-0000-0000-000000000000",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"talleres",
+								"00000000-0000-0000-0000-000000000000"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear taller",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Taller de Postman\",\n  \"instructor\": \"Ing. Josué Guerrero\",\n  \"fecha\": \"2026-11-20\",\n  \"cupo\": 15\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/talleres",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"talleres"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear taller sin nombre",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"instructor\": \"Ing. Sin Nombre\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/talleres",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"talleres"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Asistencias",
+			"item": [
+				{
+					"name": "Registrar asistencia",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"taller_id\": \"{{tallerId}}\",\n  \"nombre_alumno\": \"Josué Guerrero Castillo\",\n  \"boleta\": \"2026090099\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/asistencias",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"asistencias"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Asistencias de un taller",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/talleres/{{tallerId}}/asistencias",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"talleres",
+								"{{tallerId}}",
+								"asistencias"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Registrar asistencia incompleta",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre_alumno\": \"Josué Guerrero Castillo\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/asistencias",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"asistencias"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Registrar en un taller que no existe",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"taller_id\": \"00000000-0000-0000-0000-000000000000\",\n  \"nombre_alumno\": \"Josué Guerrero Castillo\",\n  \"boleta\": \"2026090099\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/asistencias",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"asistencias"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Usuarios",
+			"item": [
+				{
+					"name": "Listar usuarios",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/usuarios",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear usuario",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Josué Guerrero Castillo\",\n  \"correo\": \"josue.guerrero@alumno.ipn.mx\",\n  \"contrasena\": \"Segura2026\",\n  \"boleta\": \"2026090099\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/usuarios",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ver un usuario",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/usuarios/{{usuarioId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"usuarios",
+								"{{usuarioId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ver un usuario que no existe",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/usuarios/99999",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"usuarios",
+								"99999"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear usuario repetido",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Josué Guerrero Castillo\",\n  \"correo\": \"josue.guerrero@alumno.ipn.mx\",\n  \"contrasena\": \"Segura2026\",\n  \"boleta\": \"2026090099\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/usuarios",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Usuario con correo inválido",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Usuario Prueba\",\n  \"correo\": \"correo-sin-arroba\",\n  \"contrasena\": \"Segura2026\",\n  \"boleta\": \"2026090088\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/usuarios",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Usuario con boleta corta",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Usuario Prueba\",\n  \"correo\": \"prueba.boleta@alumno.ipn.mx\",\n  \"contrasena\": \"Segura2026\",\n  \"boleta\": \"123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/usuarios",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Usuario con contraseña corta",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Usuario Prueba\",\n  \"correo\": \"prueba.pass@alumno.ipn.mx\",\n  \"contrasena\": \"corta\",\n  \"boleta\": \"2026090087\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/usuarios",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Usuario sin datos",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"X\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/usuarios",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar usuario",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"rol\": \"docente\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/usuarios/{{usuarioId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"usuarios",
+								"{{usuarioId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar sin datos",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/usuarios/{{usuarioId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"usuarios",
+								"{{usuarioId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar con correo repetido",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"correo\": \"admin@cecyt9.ipn.mx\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/usuarios/{{usuarioId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"usuarios",
+								"{{usuarioId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar usuario que no existe",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"rol\": \"docente\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/usuarios/99999",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"usuarios",
+								"99999"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar usuario",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/usuarios/{{usuarioId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"usuarios",
+								"{{usuarioId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
+

@@ -1,11 +1,12 @@
 {
   "name": "expressproyecto",
   "version": "1.0.0",
-  "description": "Ejemplo de Proyectos Express",
+  "description": "Backend API para Registro de Asistencia y Talleres - CECyT 9",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "node test-backend.js",
+    "test:backend": "node test-backend.js"
   },
   "author": "Guerrero Castillo Josué",
   "license": "ISC",
