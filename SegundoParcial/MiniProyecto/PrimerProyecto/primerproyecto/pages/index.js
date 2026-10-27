@@ -1,11 +1,17 @@
 import Link from 'next/link';
 
-export default function Home(){
-    return(
+export default function Home() {
+    return (
         <main>
-            <h1>Esto es un ejemplo de Pagina Principal con Next</h1>
+            <h1>Registro de Asistencia a Talleres - CECyT 9</h1>
             <p>
-                <Link href="/practica/1" >Ir a Practica 1</Link>
+                <Link href="/talleres">Ver Talleres</Link>
+            </p>
+            <p>
+                <Link href="/perfil">Mi perfil</Link>
+            </p>
+            <p>
+                <Link href="/practica/1">Ir a Práctica 1</Link>
             </p>
         </main>
     );

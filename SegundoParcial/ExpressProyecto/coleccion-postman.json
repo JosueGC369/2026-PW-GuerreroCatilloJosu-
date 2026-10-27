@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "cecyt9-backend-guerrero-castillo-josue",
+		"_postman_id": "cecyt9-backend-collection",
 		"name": "CECyT9 - Mi backend - Guerrero Castillo Josué",
 		"description": "Colección completa de 24 peticiones para la práctica de la Semana 9 de Programación Web.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -111,7 +111,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"nombre\": \"Taller de Postman\",\n  \"instructor\": \"Ing. Josué Guerrero\",\n  \"fecha\": \"2026-11-20\",\n  \"cupo\": 15\n}"
+							"raw": "{\n  \"nombre\": \"Taller de Postman\",\n  \"instructor\": \"Ing. Tu Nombre\",\n  \"fecha\": \"2026-11-20\",\n  \"cupo\": 15\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/talleres",
@@ -170,7 +170,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"taller_id\": \"{{tallerId}}\",\n  \"nombre_alumno\": \"Josué Guerrero Castillo\",\n  \"boleta\": \"2026090099\"\n}"
+							"raw": "{\n  \"taller_id\": \"{{tallerId}}\",\n  \"nombre_alumno\": \"Tu Nombre Completo\",\n  \"boleta\": \"2026090099\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/asistencias",
@@ -217,7 +217,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"nombre_alumno\": \"Josué Guerrero Castillo\"\n}"
+							"raw": "{\n  \"nombre_alumno\": \"Tu Nombre Completo\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/asistencias",
@@ -244,7 +244,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"taller_id\": \"00000000-0000-0000-0000-000000000000\",\n  \"nombre_alumno\": \"Josué Guerrero Castillo\",\n  \"boleta\": \"2026090099\"\n}"
+							"raw": "{\n  \"taller_id\": \"00000000-0000-0000-0000-000000000000\",\n  \"nombre_alumno\": \"Tu Nombre Completo\",\n  \"boleta\": \"2026090099\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/asistencias",
@@ -294,7 +294,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"nombre\": \"Josué Guerrero Castillo\",\n  \"correo\": \"josue.guerrero@alumno.ipn.mx\",\n  \"contrasena\": \"Segura2026\",\n  \"boleta\": \"2026090099\"\n}"
+							"raw": "{\n  \"nombre\": \"Tu Nombre Completo\",\n  \"correo\": \"tu.nombre@alumno.ipn.mx\",\n  \"contrasena\": \"Segura2026\",\n  \"boleta\": \"2026090099\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/usuarios",
@@ -359,7 +359,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"nombre\": \"Josué Guerrero Castillo\",\n  \"correo\": \"josue.guerrero@alumno.ipn.mx\",\n  \"contrasena\": \"Segura2026\",\n  \"boleta\": \"2026090099\"\n}"
+							"raw": "{\n  \"nombre\": \"Tu Nombre Completo\",\n  \"correo\": \"tu.nombre@alumno.ipn.mx\",\n  \"contrasena\": \"Segura2026\",\n  \"boleta\": \"2026090099\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/usuarios",
@@ -617,4 +617,3 @@
 		}
 	]
 }
-

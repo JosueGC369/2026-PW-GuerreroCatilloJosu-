@@ -41,7 +41,7 @@ function makeRequest(method, path, body = null) {
 }
 
 async function runTests() {
-    server = app.listen(TEST_PORT);
+    server = app.listen(TEST_PORT, '127.0.0.1');
     await new Promise(r => setTimeout(r, 200));
 
     const results = [];
@@ -66,7 +66,7 @@ async function runTests() {
 
         res = await makeRequest('POST', '/api/talleres', {
             nombre: 'Taller de Postman',
-            instructor: 'Ing. Josué Guerrero',
+            instructor: 'Ing. Tu Nombre',
             fecha: '2026-11-20',
             cupo: 15
         });
@@ -78,7 +78,7 @@ async function runTests() {
 
         res = await makeRequest('POST', '/api/asistencias', {
             taller_id: String(tallerId),
-            nombre_alumno: 'Josué Guerrero Castillo',
+            nombre_alumno: 'Tu Nombre Completo',
             boleta: '2026090099'
         });
         results.push({ id: 7, name: 'POST /api/asistencias', expected: 201, actual: res.status, ok: res.status === 201 });
@@ -86,12 +86,12 @@ async function runTests() {
         res = await makeRequest('GET', `/api/talleres/${tallerId}/asistencias`);
         results.push({ id: 8, name: 'GET /api/talleres/:id/asistencias', expected: 200, actual: res.status, ok: res.status === 200 });
 
-        res = await makeRequest('POST', '/api/asistencias', { nombre_alumno: 'Josué Guerrero Castillo' });
+        res = await makeRequest('POST', '/api/asistencias', { nombre_alumno: 'Tu Nombre Completo' });
         results.push({ id: 9, name: 'POST /api/asistencias incompleta', expected: 400, actual: res.status, ok: res.status === 400 });
 
         res = await makeRequest('POST', '/api/asistencias', {
             taller_id: '00000000-0000-0000-0000-000000000000',
-            nombre_alumno: 'Josué Guerrero Castillo',
+            nombre_alumno: 'Tu Nombre Completo',
             boleta: '2026090099'
         });
         results.push({ id: 10, name: 'POST /api/asistencias taller inexistente', expected: 500, actual: res.status, ok: res.status === 500 });
@@ -100,8 +100,8 @@ async function runTests() {
         results.push({ id: 11, name: 'GET /api/usuarios', expected: 200, actual: res.status, ok: res.status === 200 });
 
         res = await makeRequest('POST', '/api/usuarios', {
-            nombre: 'Josué Guerrero Castillo',
-            correo: 'josue.guerrero@alumno.ipn.mx',
+            nombre: 'Tu Nombre Completo',
+            correo: 'tu.nombre@alumno.ipn.mx',
             contrasena: 'Segura2026',
             boleta: '2026090099'
         });
@@ -115,8 +115,8 @@ async function runTests() {
         results.push({ id: 14, name: 'GET /api/usuarios/:id inexistente', expected: 404, actual: res.status, ok: res.status === 404 });
 
         res = await makeRequest('POST', '/api/usuarios', {
-            nombre: 'Josué Guerrero Castillo',
-            correo: 'josue.guerrero@alumno.ipn.mx',
+            nombre: 'Tu Nombre Completo',
+            correo: 'tu.nombre@alumno.ipn.mx',
             contrasena: 'Segura2026',
             boleta: '2026090099'
         });
