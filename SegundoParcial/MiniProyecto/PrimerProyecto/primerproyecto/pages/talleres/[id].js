@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { pedirJSON } from '../../lib/api';
 import { formatearFecha, yaPaso, ocultarBoleta } from '../../lib/formato';
-import { validarBoleta } from '../../lib/validaciones';
+import { validarBoleta, validarNombre } from '../../lib/validaciones';
 import estilos from '../../styles/Talleres.module.css';
 
 export default function TallerDetalle() {
@@ -12,6 +12,8 @@ export default function TallerDetalle() {
 
   const [taller, setTaller] = useState(null);
   const [asistencias, setAsistencias] = useState([]);
+  const [todas, setTodas] = useState([]); // todas las asistencias (todos los talleres)
+  const [talleresLista, setTalleresLista] = useState([]);
   const [errorCarga, setErrorCarga] = useState('');
   const [cargando, setCargando] = useState(true);
 
@@ -33,10 +35,18 @@ export default function TallerDetalle() {
 
   async function cargar() {
     try {
-      const t = await pedirJSON(`/talleres/${id}`);
-      const a = await pedirJSON(`/talleres/${id}/asistencias`);
+      // Carga el taller, sus inscritos y también TODAS las asistencias,
+      // para poder impedir inscribirse en dos talleres a la vez.
+      const [t, a, todasAsistencias, listaTalleres] = await Promise.all([
+        pedirJSON(`/talleres/${id}`),
+        pedirJSON(`/talleres/${id}/asistencias`),
+        pedirJSON('/asistencias'),
+        pedirJSON('/talleres'),
+      ]);
       setTaller(t);
       setAsistencias(a);
+      setTodas(todasAsistencias);
+      setTalleresLista(listaTalleres);
       setErrorCarga('');
     } catch (err) {
       setErrorCarga(err.message);
@@ -57,11 +67,35 @@ export default function TallerDetalle() {
     const nombreLimpio = nombre.trim();
     const boletaLimpia = boleta.trim();
 
-    if (!nombreLimpio) return setErrorForm('Escribe tu nombre.');
+    // Validaciones "cero friendly": campo vacío o puro cero no pasa
+    if (!nombreLimpio || /^0+$/.test(nombreLimpio))
+      return setErrorForm('Escribe tu nombre (no se aceptan solo ceros).');
+    if (!boletaLimpia || /^0+$/.test(boletaLimpia))
+      return setErrorForm(
+        'La boleta es obligatoria y no se acepta puros ceros (0000000000).'
+      );
+    if (!validarNombre(nombreLimpio))
+      return setErrorForm(
+        'El nombre solo admite letras y espacios (entre 3 y 60 caracteres).'
+      );
     if (!validarBoleta(boletaLimpia))
       return setErrorForm('La boleta debe tener 10 dígitos.');
     if (asistencias.some((a) => a.boleta === boletaLimpia))
       return setErrorForm('Esa boleta ya está inscrita en este taller.');
+
+    // Regla: una boleta solo puede estar inscrita en UN taller a la vez
+    const otra = todas.find(
+      (a) => a.boleta === boletaLimpia && a.taller_id !== id
+    );
+    if (otra) {
+      const t = talleresLista.find((x) => x.id === otra.taller_id);
+      return setErrorForm(
+        `Esa boleta ya está inscrita en otro taller${
+          t ? `: «${t.nombre}»` : ''
+        }. Solo puedes estar inscrito en uno a la vez.`
+      );
+    }
+
     if (lleno) return setErrorForm('El taller ya no tiene lugares.');
 
     setEnviando(true);
@@ -138,12 +172,12 @@ export default function TallerDetalle() {
         <h2>Inscribirme</h2>
         <form onSubmit={inscribir} className="formulario">
           <input
-            placeholder="Nombre completo"
+            placeholder="Nombre completo (solo letras)"
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
           />
           <input
-            placeholder="Boleta (10 dígitos)"
+            placeholder="Boleta (10 dígitos, no puros ceros)"
             value={boleta}
             onChange={(e) => setBoleta(e.target.value)}
           />
@@ -155,6 +189,10 @@ export default function TallerDetalle() {
               : 'Inscribirme'}
           </button>
         </form>
+        <p className={estilos.ayuda}>
+          Reglas: la boleta debe tener 10 dígitos, no puede ser puros ceros y
+          una boleta solo puede estar inscrita en un taller a la vez.
+        </p>
         {errorForm && <p className="error">{errorForm}</p>}
         {exito && <p className={estilos.exito}>{exito}</p>}
       </section>

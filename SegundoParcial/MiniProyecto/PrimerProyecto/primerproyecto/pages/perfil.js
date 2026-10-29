@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { pedirJSON } from '../lib/api';
 import { formatearFecha } from '../lib/formato';
 import { validarBoleta } from '../lib/validaciones';
@@ -7,6 +8,7 @@ import { ocultarBoleta } from '../lib/formato';
 import estilos from '../styles/Talleres.module.css';
 
 export default function Perfil() {
+  const router = useRouter();
   const [boleta, setBoleta] = useState('');
   const [buscada, setBuscada] = useState('');
   const [alumno, setAlumno] = useState(null);
@@ -16,10 +18,23 @@ export default function Perfil() {
   const [error, setError] = useState('');
   const [cargando, setCargando] = useState(false);
 
-  async function buscar(e) {
-    e.preventDefault();
+  // Si llegan con ?boleta= (desde el registro), pre-llena y busca directo
+  useEffect(() => {
+    if (router.query.boleta) {
+      setBoleta(String(router.query.boleta));
+      buscarPor(null, String(router.query.boleta));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.query.boleta]);
+
+  function buscar(e) {
+    return buscarPor(e, boleta);
+  }
+
+  async function buscarPor(e, valor) {
+    if (e) e.preventDefault();
     setError('');
-    const b = boleta.trim();
+    const b = String(valor || '').trim();
     if (!validarBoleta(b)) return setError('La boleta debe tener 10 dígitos.');
     setCargando(true);
     try {
@@ -90,7 +105,9 @@ export default function Perfil() {
                 La boleta {buscada} no tiene cuenta registrada
                 {nombreInscrito
                   ? ` (inscripciones a nombre de ${nombreInscrito})`
-                  : ''}. Aun así puedes inscribirte en un taller.
+                  : ''}. Aun así puedes inscribirte en un taller o{' '}
+                <Link href={`/registro?boleta=${buscada}`}>crear tu cuenta</Link>{' '}
+                con esa boleta.
               </p>
             )}
           </section>

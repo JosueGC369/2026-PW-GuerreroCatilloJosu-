@@ -12,8 +12,10 @@ function validarCorreo(correo) {
 //aqui va funcion de boleta
 function validarBoleta(boleta) {
     if (typeof boleta !== 'string') return false;
+    const limpio = boleta.trim();
     const regex = /^\d{10}$/;
-    return regex.test(boleta.trim());
+    // 10 dígitos exactos y no se acepta puros ceros
+    return regex.test(limpio) && limpio !== '0000000000';
 }
 
 function validarContrasena(contrasena) {
