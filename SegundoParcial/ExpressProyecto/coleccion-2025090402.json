@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "cecyt9-backend-collection",
 		"name": "CECyT9 - Mi backend - Guerrero Castillo Josué",
-		"description": "Colección completa de 24 peticiones para la práctica de la Semana 9 de Programación Web.",
+		"description": "Colección de 24 peticiones para la práctica de la Semana 9 de Programación Web.\n\nEs re-ejecutable: cada corrida crea sus propios datos de prueba con correo y boleta únicos, captura el ID del usuario que creamos y lo elimina al final. El usuario Admin de la base de datos nunca es tocado, así que puedes correr el Runner todas las veces que quieras sin reiniciar el backend.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"variable": [
@@ -19,6 +19,21 @@
 		{
 			"key": "usuarioId",
 			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "correoNuevo",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "boletaNueva",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "boletaPrueba",
+			"value": "",
 			"type": "string"
 		}
 	],
@@ -38,7 +53,20 @@
 					]
 				}
 			},
-			"response": []
+			"response": [],
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test('GET / responde 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			]
 		},
 		{
 			"name": "Talleres",
@@ -59,7 +87,23 @@
 							]
 						}
 					},
-					"response": []
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('La lista de talleres responde 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test('Devuelve al menos un taller', function () {",
+									"    pm.expect(pm.response.json()).to.be.an('array').that.is.not.empty;",
+									"});"
+								]
+							}
+						}
+					]
 				},
 				{
 					"name": "Ver un taller",
@@ -78,7 +122,23 @@
 							]
 						}
 					},
-					"response": []
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('El taller consultado responde 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test('El taller incluye su cupo y ocupados', function () {",
+									"    pm.expect(pm.response.json()).to.include.keys('id', 'nombre', 'cupo', 'asistentes');",
+									"});"
+								]
+							}
+						}
+					]
 				},
 				{
 					"name": "Ver un taller que no existe",
@@ -97,7 +157,20 @@
 							]
 						}
 					},
-					"response": []
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Un taller inexistente responde 404', function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								]
+							}
+						}
+					]
 				},
 				{
 					"name": "Crear taller",
@@ -124,7 +197,23 @@
 							]
 						}
 					},
-					"response": []
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('La creación del taller responde 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test('El taller creado incluye un id', function () {",
+									"    pm.expect(pm.response.json()).to.have.property('id');",
+									"});"
+								]
+							}
+						}
+					]
 				},
 				{
 					"name": "Crear taller sin nombre",
@@ -151,7 +240,20 @@
 							]
 						}
 					},
-					"response": []
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Un taller sin nombre ni fecha responde 400', function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								]
+							}
+						}
+					]
 				}
 			]
 		},
@@ -170,7 +272,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"taller_id\": \"{{tallerId}}\",\n  \"nombre_alumno\": \"Tu Nombre Completo\",\n  \"boleta\": \"2026090099\"\n}"
+							"raw": "{\n  \"taller_id\": \"{{tallerId}}\",\n  \"nombre_alumno\": \"Tu Nombre Completo\",\n  \"boleta\": \"{{boletaPrueba}}\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/asistencias",
@@ -183,7 +285,34 @@
 							]
 						}
 					},
-					"response": []
+					"response": [],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"// Boleta única por corrida (10 dígitos) para que este taller",
+									"// pueda inscribir a su alumnito de prueba en cada ejecución.",
+									"pm.collectionVariables.set('boletaPrueba', Math.floor(Date.now() / 1000).toString());"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('La asistencia se registra con 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test('La asistencia guardada repite la boleta enviada', function () {",
+									"    pm.expect(pm.response.json().boleta).to.eql(pm.collectionVariables.get('boletaPrueba'));",
+									"});"
+								]
+							}
+						}
+					]
 				},
 				{
 					"name": "Asistencias de un taller",
@@ -203,7 +332,20 @@
 							]
 						}
 					},
-					"response": []
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('La lista de inscritos responde 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								]
+							}
+						}
+					]
 				},
 				{
 					"name": "Registrar asistencia incompleta",
@@ -230,7 +372,20 @@
 							]
 						}
 					},
-					"response": []
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Una asistencia incompleta responde 400', function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								]
+							}
+						}
+					]
 				},
 				{
 					"name": "Registrar en un taller que no existe",
@@ -244,7 +399,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"taller_id\": \"00000000-0000-0000-0000-000000000000\",\n  \"nombre_alumno\": \"Tu Nombre Completo\",\n  \"boleta\": \"2026090099\"\n}"
+							"raw": "{\n  \"taller_id\": \"00000000-0000-0000-0000-000000000000\",\n  \"nombre_alumno\": \"Tu Nombre Completo\",\n  \"boleta\": \"2026090086\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/asistencias",
@@ -257,7 +412,20 @@
 							]
 						}
 					},
-					"response": []
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Una boleta en taller inexistente responde 404', function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								]
+							}
+						}
+					]
 				}
 			]
 		},
@@ -280,7 +448,20 @@
 							]
 						}
 					},
-					"response": []
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('La lista de usuarios responde 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								]
+							}
+						}
+					]
 				},
 				{
 					"name": "Crear usuario",
@@ -294,7 +475,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"nombre\": \"Tu Nombre Completo\",\n  \"correo\": \"tu.nombre@alumno.ipn.mx\",\n  \"contrasena\": \"Segura2026\",\n  \"boleta\": \"2026090099\"\n}"
+							"raw": "{\n  \"nombre\": \"Alumno De Postman\",\n  \"correo\": \"{{correoNuevo}}\",\n  \"contrasena\": \"Segura.2026\",\n  \"boleta\": \"{{boletaNueva}}\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/usuarios",
@@ -307,7 +488,37 @@
 							]
 						}
 					},
-					"response": []
+					"response": [],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"// Sello único por corrida (epoch en segundos, 10 dígitos) para",
+									"// que correo y boleta no choque con nada de corridas anteriores.",
+									"var sello = Math.floor(Date.now() / 1000).toString();",
+									"pm.collectionVariables.set('correoNuevo', 'prueba.' + sello + '@alumno.ipn.mx');",
+									"pm.collectionVariables.set('boletaNueva', sello);"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('La creación del usuario responde 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"if (pm.response.code === 201) {",
+									"    var datos = pm.response.json();",
+									"    pm.collectionVariables.set('usuarioId', String(datos.id));",
+									"}"
+								]
+							}
+						}
+					]
 				},
 				{
 					"name": "Ver un usuario",
@@ -326,7 +537,20 @@
 							]
 						}
 					},
-					"response": []
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('El usuario recién creado responde 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								]
+							}
+						}
+					]
 				},
 				{
 					"name": "Ver un usuario que no existe",
@@ -345,7 +569,20 @@
 							]
 						}
 					},
-					"response": []
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Un usuario inexistente responde 404', function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								]
+							}
+						}
+					]
 				},
 				{
 					"name": "Crear usuario repetido",
@@ -359,7 +596,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"nombre\": \"Tu Nombre Completo\",\n  \"correo\": \"tu.nombre@alumno.ipn.mx\",\n  \"contrasena\": \"Segura2026\",\n  \"boleta\": \"2026090099\"\n}"
+							"raw": "{\n  \"nombre\": \"Alumno De Postman\",\n  \"correo\": \"{{correoNuevo}}\",\n  \"contrasena\": \"Segura.2026\",\n  \"boleta\": \"{{boletaNueva}}\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/usuarios",
@@ -372,7 +609,20 @@
 							]
 						}
 					},
-					"response": []
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('El mismo correo y boleta otra vez responde 409', function () {",
+									"    pm.response.to.have.status(409);",
+									"});"
+								]
+							}
+						}
+					]
 				},
 				{
 					"name": "Usuario con correo inválido",
@@ -386,7 +636,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"nombre\": \"Usuario Prueba\",\n  \"correo\": \"correo-sin-arroba\",\n  \"contrasena\": \"Segura2026\",\n  \"boleta\": \"2026090088\"\n}"
+							"raw": "{\n  \"nombre\": \"Usuario Prueba\",\n  \"correo\": \"correo-sin-arroba\",\n  \"contrasena\": \"Segura.2026\",\n  \"boleta\": \"2026090088\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/usuarios",
@@ -399,7 +649,20 @@
 							]
 						}
 					},
-					"response": []
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Un correo sin formato válido responde 400', function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								]
+							}
+						}
+					]
 				},
 				{
 					"name": "Usuario con boleta corta",
@@ -413,7 +676,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"nombre\": \"Usuario Prueba\",\n  \"correo\": \"prueba.boleta@alumno.ipn.mx\",\n  \"contrasena\": \"Segura2026\",\n  \"boleta\": \"123\"\n}"
+							"raw": "{\n  \"nombre\": \"Usuario Prueba\",\n  \"correo\": \"prueba.boleta@alumno.ipn.mx\",\n  \"contrasena\": \"Segura.2026\",\n  \"boleta\": \"123\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/usuarios",
@@ -426,7 +689,20 @@
 							]
 						}
 					},
-					"response": []
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Una boleta de menos de 10 dígitos responde 400', function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								]
+							}
+						}
+					]
 				},
 				{
 					"name": "Usuario con contraseña corta",
@@ -453,7 +729,20 @@
 							]
 						}
 					},
-					"response": []
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Una contraseña menor a 8 caracteres responde 400', function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								]
+							}
+						}
+					]
 				},
 				{
 					"name": "Usuario sin datos",
@@ -480,7 +769,20 @@
 							]
 						}
 					},
-					"response": []
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('A falta de campos obligatorios responde 400', function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								]
+							}
+						}
+					]
 				},
 				{
 					"name": "Actualizar usuario",
@@ -508,7 +810,23 @@
 							]
 						}
 					},
-					"response": []
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('El cambio de rol responde 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test('El rol quedó actualizado a docente', function () {",
+									"    pm.expect(pm.response.json().rol).to.eql('docente');",
+									"});"
+								]
+							}
+						}
+					]
 				},
 				{
 					"name": "Actualizar sin datos",
@@ -536,7 +854,20 @@
 							]
 						}
 					},
-					"response": []
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Un PUT sin campos responde 400', function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								]
+							}
+						}
+					]
 				},
 				{
 					"name": "Actualizar con correo repetido",
@@ -564,7 +895,20 @@
 							]
 						}
 					},
-					"response": []
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Tomar el correo del Admin responde 409', function () {",
+									"    pm.response.to.have.status(409);",
+									"});"
+								]
+							}
+						}
+					]
 				},
 				{
 					"name": "Actualizar usuario que no existe",
@@ -592,7 +936,20 @@
 							]
 						}
 					},
-					"response": []
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Actualizar un usuario inexistente responde 404', function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								]
+							}
+						}
+					]
 				},
 				{
 					"name": "Eliminar usuario",
@@ -611,7 +968,20 @@
 							]
 						}
 					},
-					"response": []
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('La eliminación del usuario de prueba responde 204', function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								]
+							}
+						}
+					]
 				}
 			]
 		}

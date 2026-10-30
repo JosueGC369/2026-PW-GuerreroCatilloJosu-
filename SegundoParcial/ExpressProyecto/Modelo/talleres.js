@@ -4,7 +4,18 @@ const crypto = require('crypto');
 //consultar todos los talleres
 async function listar() {
     const [filas] = await pool.query('SELECT id, nombre, instructor, fecha, cupo FROM talleres ORDER BY fecha ASC');
-    return filas;
+    const claves = new Set();
+    return filas.filter(taller => {
+        const clave = JSON.stringify([
+            String(taller.nombre || '').trim().toLocaleLowerCase(),
+            String(taller.instructor || '').trim().toLocaleLowerCase(),
+            String(taller.fecha || '').slice(0, 10),
+            Number(taller.cupo)
+        ]);
+        if (claves.has(clave)) return false;
+        claves.add(clave);
+        return true;
+    });
 }
 
 //consultar por taller

@@ -26,8 +26,26 @@ CREATE TABLE IF NOT EXISTS asistencias (
     nombre_alumno VARCHAR(255) NOT NULL,
     boleta VARCHAR(20) NOT NULL,
     fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_asistencias_boleta (boleta),
     FOREIGN KEY (taller_id) REFERENCES talleres(id) ON DELETE CASCADE
 );
+
+-- También aplica la restricción a bases de datos que ya tenían la tabla creada.
+SET @indice_boleta_existe = (
+    SELECT COUNT(*)
+    FROM information_schema.statistics
+    WHERE table_schema = DATABASE()
+      AND table_name = 'asistencias'
+      AND index_name = 'uq_asistencias_boleta'
+);
+SET @crear_indice_boleta = IF(
+    @indice_boleta_existe = 0,
+    'ALTER TABLE asistencias ADD UNIQUE KEY uq_asistencias_boleta (boleta)',
+    'SELECT 1'
+);
+PREPARE sentencia_indice_boleta FROM @crear_indice_boleta;
+EXECUTE sentencia_indice_boleta;
+DEALLOCATE PREPARE sentencia_indice_boleta;
 
 INSERT IGNORE INTO usuarios (id, nombre, correo, contrasena_hash, boleta, rol) VALUES
 (1, 'Admin Semilla', 'admin@cecyt9.ipn.mx', '$2b$10$wTqg.qZl7p0xV8.Z7p1bse2Q2x5qN6V5g1b4a8e9e1c2d3f4a5b6c', '2026090001', 'admin'),

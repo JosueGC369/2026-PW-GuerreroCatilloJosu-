@@ -29,26 +29,28 @@ export default function Registro() {
 
   function validarTodo() {
     const nuevosErrores = {};
+    const nombreLimpio = nombre.trim().replace(/\s+/g, ' ');
+    const correoLimpio = correo.trim();
 
-    if (!nombre.trim()) {
+    if (!nombreLimpio) {
       nuevosErrores.nombre = 'El nombre es obligatorio.';
-    } else if (!validarNombre(nombre)) {
+    } else if (!validarNombre(nombreLimpio)) {
       nuevosErrores.nombre =
-        'Solo letras y espacios, mínimo 3 caracteres y máximo 60.';
+        'Usa de 3 a 60 letras; puedes incluir espacios, apóstrofes y guiones.';
     }
 
-    if (!correo.trim()) {
+    if (!correoLimpio) {
       nuevosErrores.correo = 'El correo es obligatorio.';
-    } else if (!validarCorreo(correo)) {
+    } else if (!validarCorreo(correoLimpio)) {
       nuevosErrores.correo =
-        'Formato inválido. Ejemplo: nombre@alumno.ipn.mx';
+        'Escribe un correo válido (máximo 254 caracteres).';
     }
 
     if (!contrasena) {
       nuevosErrores.contrasena = 'La contraseña es obligatoria.';
     } else if (!validarContrasena(contrasena)) {
       nuevosErrores.contrasena =
-        'Mínimo 8 caracteres, con al menos una letra y un número.';
+        'Usa de 8 a 64 caracteres con mayúscula, minúscula, número y símbolo.';
     }
 
     if (!boleta.trim()) {
@@ -74,8 +76,8 @@ export default function Registro() {
       const usuario = await pedirJSON('/usuarios', {
         method: 'POST',
         body: JSON.stringify({
-          nombre: nombre.trim(),
-          correo: correo.trim(),
+          nombre: nombre.trim().replace(/\s+/g, ' '),
+          correo: correo.trim().toLowerCase(),
           contrasena: contrasena,
           boleta: boleta.trim(),
         }),
@@ -132,11 +134,18 @@ export default function Registro() {
             className={estilos.entrada}
             type="text"
             placeholder="Ej. Josué Guerrero Castillo"
+            autoComplete="name"
+            maxLength={60}
+            required
+            aria-invalid={Boolean(errores.nombre)}
+            aria-describedby={errores.nombre ? 'error-nombre' : undefined}
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
           />
           {errores.nombre && (
-            <p className={estilos.errorCampo}>{errores.nombre}</p>
+            <p id="error-nombre" className={estilos.errorCampo} role="alert">
+              {errores.nombre}
+            </p>
           )}
 
           <label className={estilos.etiqueta} htmlFor="correo">
@@ -147,11 +156,18 @@ export default function Registro() {
             className={estilos.entrada}
             type="email"
             placeholder="Ej. josue@alumno.ipn.mx"
+            autoComplete="email"
+            maxLength={254}
+            required
+            aria-invalid={Boolean(errores.correo)}
+            aria-describedby={errores.correo ? 'error-correo' : undefined}
             value={correo}
             onChange={(e) => setCorreo(e.target.value)}
           />
           {errores.correo && (
-            <p className={estilos.errorCampo}>{errores.correo}</p>
+            <p id="error-correo" className={estilos.errorCampo} role="alert">
+              {errores.correo}
+            </p>
           )}
 
           <label className={estilos.etiqueta} htmlFor="contrasena">
@@ -161,12 +177,23 @@ export default function Registro() {
             id="contrasena"
             className={estilos.entrada}
             type="password"
-            placeholder="Mínimo 8 caracteres, una letra y un número"
+            placeholder="8-64 caracteres, mayúscula, minúscula, número y símbolo"
+            autoComplete="new-password"
+            maxLength={64}
+            required
+            aria-invalid={Boolean(errores.contrasena)}
+            aria-describedby={errores.contrasena ? 'error-contrasena' : undefined}
             value={contrasena}
             onChange={(e) => setContrasena(e.target.value)}
           />
           {errores.contrasena && (
-            <p className={estilos.errorCampo}>{errores.contrasena}</p>
+            <p
+              id="error-contrasena"
+              className={estilos.errorCampo}
+              role="alert"
+            >
+              {errores.contrasena}
+            </p>
           )}
 
           <label className={estilos.etiqueta} htmlFor="boleta">
@@ -179,11 +206,16 @@ export default function Registro() {
             inputMode="numeric"
             maxLength={10}
             placeholder="10 dígitos, ej. 2025090402"
+            required
+            aria-invalid={Boolean(errores.boleta)}
+            aria-describedby={errores.boleta ? 'error-boleta' : undefined}
             value={boleta}
             onChange={(e) => setBoleta(e.target.value.replace(/\D/g, ''))}
           />
           {errores.boleta && (
-            <p className={estilos.errorCampo}>{errores.boleta}</p>
+            <p id="error-boleta" className={estilos.errorCampo} role="alert">
+              {errores.boleta}
+            </p>
           )}
 
           <p className={estilos.ayuda}>

@@ -148,10 +148,21 @@ class MemoryDatabase {
             return [[{ total: count }]];
         }
 
+        if (/^SELECT\s+.*FROM\s+asistencias\s+WHERE\s+boleta\s*=\s*\?/i.test(cleanSql)) {
+            const boleta = String(params[0]);
+            return [this.asistencias.filter(a => a.boleta === boleta)];
+        }
+
         if (/^SELECT\s+.*FROM\s+asistencias\s+WHERE\s+taller_id\s*=\s*\?/i.test(cleanSql)) {
             const tallerId = String(params[0]);
             const asist = this.asistencias.filter(a => String(a.taller_id) === tallerId);
             return [asist];
+        }
+
+        if (/^SELECT\s+.*FROM\s+asistencias\s+WHERE\s+id\s*=\s*\?/i.test(cleanSql)) {
+            const id = String(params[0]);
+            const asist = this.asistencias.find(a => String(a.id) === id);
+            return [asist ? [asist] : []];
         }
 
         if (/^SELECT\s+.*FROM\s+asistencias/i.test(cleanSql)) {
@@ -160,6 +171,11 @@ class MemoryDatabase {
 
         if (/^INSERT\s+INTO\s+asistencias/i.test(cleanSql)) {
             const [id, taller_id, nombre_alumno, boleta] = params;
+            if (this.asistencias.some(a => a.boleta === boleta)) {
+                const err = new Error('Duplicate entry for key asistencias.uq_asistencias_boleta');
+                err.code = 'ER_DUP_ENTRY';
+                throw err;
+            }
             const tallerExiste = this.talleres.some(t => String(t.id) === String(taller_id));
             if (!tallerExiste) {
                 const err = new Error('Cannot add or update a child row: a foreign key constraint fails (`proyecto_web`.`asistencias`, CONSTRAINT `asistencias_ibfk_1` FOREIGN KEY (`taller_id`) REFERENCES `talleres` (`id`))');

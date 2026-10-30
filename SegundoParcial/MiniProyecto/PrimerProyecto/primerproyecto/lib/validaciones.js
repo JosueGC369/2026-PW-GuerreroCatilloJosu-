@@ -5,35 +5,36 @@
 
 export function validarNombre(nombre) {
   if (typeof nombre !== 'string') return false;
-  const limpio = nombre.trim();
-  // 3 a 60 caracteres; solo letras (con acentos y ñ), separadas por espacios simples
+  const limpio = nombre.trim().replace(/\s+/g, ' ');
   return (
     limpio.length >= 3 &&
     limpio.length <= 60 &&
-    /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+(?: [A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+)*$/.test(limpio)
+    /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+(?:[ '-][A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+)*$/.test(limpio)
   );
 }
 
 export function validarCorreo(correo) {
   if (typeof correo !== 'string') return false;
   const limpio = correo.trim();
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(limpio);
+  return limpio.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(limpio);
 }
 
 export function validarBoleta(boleta) {
   if (typeof boleta !== 'string') return false;
   const limpio = boleta.trim();
-  // Exactamente 10 dígitos y no se acepta que sean puros ceros (0000000000)
   return /^\d{10}$/.test(limpio) && !/^0{10}$/.test(limpio);
 }
 
 export function validarContrasena(contrasena) {
   if (typeof contrasena !== 'string') return false;
-  // Mínimo 8 caracteres, con al menos una letra y un número
-  // (así una contraseña de puros ceros también se rechaza)
+  const bytes = new TextEncoder().encode(contrasena).length;
   return (
     contrasena.length >= 8 &&
-    /[A-Za-z]/.test(contrasena) &&
-    /[0-9]/.test(contrasena)
+    contrasena.length <= 64 &&
+    bytes <= 72 &&
+    /[A-Z]/.test(contrasena) &&
+    /[a-z]/.test(contrasena) &&
+    /\d/.test(contrasena) &&
+    /[^A-Za-z0-9\s]/.test(contrasena)
   );
 }

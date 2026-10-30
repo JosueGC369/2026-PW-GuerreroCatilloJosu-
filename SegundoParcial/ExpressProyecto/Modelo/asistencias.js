@@ -3,6 +3,16 @@ const crypto = require('crypto');
 
 //registrar asistencia
 async function registrarAsistencia({ taller_id, nombre_alumno, boleta }) {
+    const [inscripcionesExistentes] = await pool.query(
+        'SELECT id FROM asistencias WHERE boleta = ? LIMIT 1',
+        [boleta]
+    );
+    if (inscripcionesExistentes && inscripcionesExistentes.length > 0) {
+        const error = new Error('Esta boleta ya está inscrita en un taller');
+        error.code = 'ER_DUP_ENTRY';
+        throw error;
+    }
+
     const id = crypto.randomUUID();
 
     await pool.query(

@@ -2,7 +2,12 @@ const bcrypt = require('bcryptjs');
 //necesitamos al modelo
 const usuariosModel = require('../Modelo/usuarios');
 
-const { validarCorreo, validarBoleta, validarContrasena } = require('../validaciones');
+const {
+    validarNombre,
+    validarCorreo,
+    validarBoleta,
+    validarContrasena
+} = require('../validaciones');
 
 //que pasa si el correo y la boleta se duplica
 function esDuplicado(error){
@@ -30,17 +35,31 @@ async function obtenerUsuario(req, res) {
 }
 
 async function crearUsuario(req, res) {
-    const {nombre, correo, contrasena, boleta, rol} = req.body || {};
+    const {nombre, correo, contrasena, boleta} = req.body || {};
     if(!nombre || !correo || !contrasena || !boleta){
         return res.status(400).json({error: 'nombre, correo, contrasena y boleta son obligatorios'});
     }
-    if(!validarCorreo(correo)) return res.status(400).json({error: 'El correo no tiene un formato válido'});
-    if(!validarBoleta(boleta)) return res.status(400).json({error: 'La boleta debe tener 10 dígitos'});
-    if(!validarContrasena(contrasena)) return res.status(400).json({error: 'La contraseña debe tener al menos 8 caracteres'});
+    const nombreLimpio = typeof nombre === 'string' ? nombre.trim().replace(/\s+/g, ' ') : '';
+    const correoLimpio = typeof correo === 'string' ? correo.trim().toLowerCase() : '';
+    const boletaLimpia = typeof boleta === 'string' ? boleta.trim() : '';
+    if(!validarNombre(nombreLimpio)) {
+        return res.status(400).json({error: 'El nombre debe tener entre 3 y 60 caracteres y solo incluir letras, espacios, apóstrofes o guiones'});
+    }
+    if(!validarCorreo(correoLimpio)) return res.status(400).json({error: 'El correo no tiene un formato válido'});
+    if(!validarBoleta(boletaLimpia)) return res.status(400).json({error: 'La boleta debe tener 10 dígitos y no puede ser 0000000000'});
+    if(!validarContrasena(contrasena)) {
+        return res.status(400).json({error: 'La contraseña debe tener de 8 a 64 caracteres e incluir mayúscula, minúscula, número y símbolo'});
+    }
 
     try{
         const contrasenaHash = await bcrypt.hash(contrasena, 10);
-        const usuario = await usuariosModel.crear({nombre, correo, contrasenaHash, boleta, rol});
+        const usuario = await usuariosModel.crear({
+            nombre: nombreLimpio,
+            correo: correoLimpio,
+            contrasenaHash,
+            boleta: boletaLimpia,
+            rol: 'alumno'
+        });
 
         res.status(201).json(usuario);
     }catch(error){

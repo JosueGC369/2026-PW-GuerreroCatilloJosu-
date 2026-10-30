@@ -19,6 +19,7 @@ export default function TallerDetalle() {
 
   const [nombre, setNombre] = useState('');
   const [boleta, setBoleta] = useState('');
+  const [erroresCampo, setErroresCampo] = useState({});
   const [errorForm, setErrorForm] = useState('');
   const [exito, setExito] = useState('');
   const [enviando, setEnviando] = useState(false);
@@ -67,19 +68,21 @@ export default function TallerDetalle() {
     const nombreLimpio = nombre.trim();
     const boletaLimpia = boleta.trim();
 
-    // Validaciones "cero friendly": campo vacío o puro cero no pasa
-    if (!nombreLimpio || /^0+$/.test(nombreLimpio))
-      return setErrorForm('Escribe tu nombre (no se aceptan solo ceros).');
-    if (!boletaLimpia || /^0+$/.test(boletaLimpia))
-      return setErrorForm(
-        'La boleta es obligatoria y no se acepta puros ceros (0000000000).'
-      );
-    if (!validarNombre(nombreLimpio))
-      return setErrorForm(
-        'El nombre solo admite letras y espacios (entre 3 y 60 caracteres).'
-      );
-    if (!validarBoleta(boletaLimpia))
-      return setErrorForm('La boleta debe tener 10 dígitos.');
+    const nuevosErrores = {};
+    if (!nombreLimpio) {
+      nuevosErrores.nombre = 'El nombre es obligatorio.';
+    } else if (!validarNombre(nombreLimpio)) {
+      nuevosErrores.nombre =
+        'Usa de 3 a 60 letras; puedes incluir espacios, apóstrofes y guiones.';
+    }
+    if (!boletaLimpia) {
+      nuevosErrores.boleta = 'La boleta es obligatoria.';
+    } else if (!validarBoleta(boletaLimpia)) {
+      nuevosErrores.boleta =
+        'Escribe exactamente 10 dígitos; no se acepta 0000000000.';
+    }
+    setErroresCampo(nuevosErrores);
+    if (Object.keys(nuevosErrores).length > 0) return;
     if (asistencias.some((a) => a.boleta === boletaLimpia))
       return setErrorForm('Esa boleta ya está inscrita en este taller.');
 
@@ -111,6 +114,7 @@ export default function TallerDetalle() {
       setExito(`¡Listo! ${nombreLimpio} quedó inscrito(a) en el taller.`);
       setNombre('');
       setBoleta('');
+      setErroresCampo({});
       await cargar();
     } catch (err) {
       setErrorForm(err.message);
@@ -171,16 +175,49 @@ export default function TallerDetalle() {
       <section className={estilos.panel}>
         <h2>Inscribirme</h2>
         <form onSubmit={inscribir} className="formulario">
+          <label htmlFor="nombre-alumno">Nombre completo</label>
           <input
-            placeholder="Nombre completo (solo letras)"
+            id="nombre-alumno"
+            name="nombre_alumno"
+            type="text"
+            autoComplete="name"
+            maxLength={60}
+            aria-invalid={Boolean(erroresCampo.nombre)}
+            aria-describedby={erroresCampo.nombre ? 'error-nombre' : undefined}
+            placeholder="Ej. Josué Guerrero Castillo"
             value={nombre}
-            onChange={(e) => setNombre(e.target.value)}
+            onChange={(e) => {
+              setNombre(e.target.value);
+              setErroresCampo((actuales) => ({ ...actuales, nombre: '' }));
+            }}
           />
+          {erroresCampo.nombre && (
+            <p id="error-nombre" className="error" role="alert">
+              {erroresCampo.nombre}
+            </p>
+          )}
+          <label htmlFor="boleta-alumno">Boleta</label>
           <input
-            placeholder="Boleta (10 dígitos, no puros ceros)"
+            id="boleta-alumno"
+            name="boleta"
+            type="text"
+            inputMode="numeric"
+            maxLength={10}
+            autoComplete="off"
+            aria-invalid={Boolean(erroresCampo.boleta)}
+            aria-describedby={erroresCampo.boleta ? 'error-boleta' : undefined}
+            placeholder="10 dígitos, ej. 2025090402"
             value={boleta}
-            onChange={(e) => setBoleta(e.target.value)}
+            onChange={(e) => {
+              setBoleta(e.target.value.replace(/\D/g, '').slice(0, 10));
+              setErroresCampo((actuales) => ({ ...actuales, boleta: '' }));
+            }}
           />
+          {erroresCampo.boleta && (
+            <p id="error-boleta" className="error" role="alert">
+              {erroresCampo.boleta}
+            </p>
+          )}
           <button type="submit" disabled={lleno || enviando}>
             {lleno
               ? 'Sin lugares'
@@ -190,7 +227,7 @@ export default function TallerDetalle() {
           </button>
         </form>
         <p className={estilos.ayuda}>
-          Reglas: la boleta debe tener 10 dígitos, no puede ser puros ceros y
+          Reglas: la boleta debe tener 10 dígitos, no puede ser 0000000000 y
           una boleta solo puede estar inscrita en un taller a la vez.
         </p>
         {errorForm && <p className="error">{errorForm}</p>}

@@ -35,7 +35,12 @@ export default function Perfil() {
     if (e) e.preventDefault();
     setError('');
     const b = String(valor || '').trim();
-    if (!validarBoleta(b)) return setError('La boleta debe tener 10 dígitos.');
+    if (!validarBoleta(b)) {
+      setBuscada('');
+      return setError(
+        'La boleta debe tener exactamente 10 dígitos y no puede ser 0000000000.'
+      );
+    }
     setCargando(true);
     try {
       const usuarios = await pedirJSON('/usuarios');
@@ -73,10 +78,18 @@ export default function Perfil() {
     <main>
       <h1>Mi perfil</h1>
       <form onSubmit={buscar} className="formulario">
+        <label htmlFor="boleta-perfil">Busca tu perfil con tu boleta</label>
         <input
+          id="boleta-perfil"
+          name="boleta"
+          type="text"
+          inputMode="numeric"
+          maxLength={10}
+          autoComplete="off"
+          aria-label="Boleta de alumno"
           placeholder="Tu boleta (10 dígitos)"
           value={boleta}
-          onChange={(e) => setBoleta(e.target.value)}
+          onChange={(e) => setBoleta(e.target.value.replace(/\D/g, '').slice(0, 10))}
         />
         <button type="submit" disabled={cargando}>
           {cargando ? 'Buscando…' : 'Ver mi perfil'}
