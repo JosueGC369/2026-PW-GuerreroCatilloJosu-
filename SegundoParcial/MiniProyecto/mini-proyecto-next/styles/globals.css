@@ -35,6 +35,46 @@ a {
   text-decoration: none;
 }
 
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px 24px;
+  background: #6b1d3a;
+}
+
+nav a {
+  color: #fff;
+}
+
+main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 360px;
+  margin: 16px 0 24px;
+}
+
+input,
+button {
+  padding: 8px;
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.error {
+  color: #b91c1c;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;

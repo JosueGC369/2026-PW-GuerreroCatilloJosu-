@@ -10,7 +10,7 @@ Una expresión regular, es un patron donde se identifica que elementos serán va
 */
 
 const patrones = {
-    nombre : /^[A-Za-zÁÉÍÓÚÑáéíóúñüÜ\s{2,60}]$/,
+    nombre : /^[A-Za-zÁÉÍÓÚÑáéíóúñüÜ\s]{2,60}$/,
     boleta : /^\d{10}$/,
     fecha : /^(0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/
 };
@@ -22,7 +22,7 @@ const mensajes = {
 }
 
 function validarCampo(campo, valor){
-    return patrones[campo].test()(valor.trim());
+    return patrones[campo].test(valor.trim());
 }
 
 //Necesitamos ver el resto del archivo DOOM,
@@ -30,7 +30,7 @@ function validarCampo(campo, valor){
 if (typeof document !== 'undefined') {
     const formulario = document.getElementById('form-registro');
 
-    formulario.addEventListener('submit', function(evento) => {
+    formulario?.addEventListener('submit', (evento) => {
         evento.preventDefault(); //Evita que el formulario se envie automaricamente
 
 
@@ -47,9 +47,9 @@ if (typeof document !== 'undefined') {
             if (!esValido) formularioValido = false;
         }
 
-        const mensajeExitoso = document.getElementById('mensaje-exitoso');
+        const mensajeExito = document.getElementById('mensaje-exito');
         mensajeExito.textContent = formularioValido ? 'Registro exitoso!' : '';
-    })
+    });
 
     
 }
